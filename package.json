@@ -10,6 +10,8 @@
   "author": "Raju Dandigam <raju0574@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "firebase": "^5.8.1",
+    "firebase-admin": "^6.5.1"
   }
 }
