@@ -1,8 +1,20 @@
-const firebase = require('../../utils/firebase/setup');
+const signup = (req, res, db) => {
+  const userRef = db.ref('users');
+  const { fname, lname, email } = req.query;
 
-
-const signup = (req, res) => {
-  res.send('Creating account please wait');
+  userRef.push({
+    fname,
+    lname,
+    email
+  }, function(err) {
+    if(err) {
+      res.send(err);
+    } else {
+      res.json({
+        message: `${fname} ${lname} user created`
+      })
+    }
+  });
 };
 
 module.exports = signup;
