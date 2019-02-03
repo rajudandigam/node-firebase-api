@@ -1,9 +1,14 @@
-const login = (req, res, db) => {
-  const userRef = db.ref('users');
+const login = (req, res, admin) => {
+  const db = admin.database();
+  const { userName, password } = req.query;
 
-  userRef.once('value', function(snapshot, prevChildKey) {
-    res.json(snapshot.val());
-  })
+  db.ref(`users/${userName}`).once('value', (snapshot) => {
+    if(snapshot.exists()) {
+      res.json('Your logged in. Welcome!!!');
+    } else {
+      res.json('Account doesnt exist');
+    }
+  });
 };
 
 module.exports = login;

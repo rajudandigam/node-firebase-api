@@ -3,18 +3,17 @@ const app = express();
 const signup = require('./routes/signup/signup');
 const login = require('./routes/login/login');
 const admin = require('./utils/firebase/admin');
-const db = admin.database();
 
 app.get('/', (req, res) => {
-  res.send('Welcome for api');
+  res.send('Welcome from api');
 });
 
 app.get('/login', (req, res) => {
-  login(req, res, db);
+  login(req, res, admin);
 });
 
 app.get('/signup', (req, res) => {
-  signup(req, res, db);
+  signup(req, res, admin);
 });
 
 const hostName = '127.0.0.1';
