@@ -13,7 +13,17 @@ const insertUserRealtime = (userRef, data, res) => {
 };
 
 const insertUserFirestore = (userRef, data, res) => {
-
+  userRef.set(data)
+    .then( doc => {
+      console.log('Added doc', doc);
+      res.json({
+        message: `${data.fname} ${data.lname} user created`
+      })
+    })
+    .catch( err => {
+      console.log('Setting user error ', err);
+      res.json('something went wrong. Please try again later');
+    })
 };
 
 const signup = (req, res, admin) => {
@@ -41,8 +51,20 @@ const signup = (req, res, admin) => {
 
   if(firestore) {
     const db = admin.firestore();
+    const userRef = db.collection('users').doc(userName);
 
-    insertUserFirestore(db.collections('users'), data, res);
+    userRef.get()
+      .then( doc => {
+        if(!doc.exists) {
+          insertUserFirestore(userRef, data, res);
+        } else {
+          console.log('User Name already exists. Please try different');
+        }
+      })
+      .catch( err => {
+        console.log('Getting doc error ', err);
+        res.json('something went wrong. Please try again later');
+      });
   }
 };
 
