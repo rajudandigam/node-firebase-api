@@ -1,12 +1,12 @@
 const { database: { realtime, firestore } } = require('../../config/config');
 
 const insertUserRealtime = (userRef, data, res) => {
-  userRef.push(data, function(err) {
+  userRef.set(data, function(err) {
     if(err) {
       res.send(err);
     } else {
       res.json({
-        message: `${fname} ${lname} user created`
+        message: `${data.fname} ${data.lname} user created`
       })
     }
   });
@@ -28,10 +28,10 @@ const signup = (req, res, admin) => {
 
   if(realtime) {
     const db = admin.database();
-    const userRef = db.ref(`users/${userName}`);
+    const userRef = db.ref('users').child(userName);
 
     userRef.once('value', (snapshot) => {
-      if(snapshot.exists) {
+      if(snapshot.exists()) {
         res.json('User Name already exists. Please try different')
       } else {
         insertUserRealtime(userRef, data, res); 

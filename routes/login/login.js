@@ -4,7 +4,11 @@ const login = (req, res, admin) => {
 
   db.ref(`users/${userName}`).once('value', (snapshot) => {
     if(snapshot.exists()) {
-      res.json('Your logged in. Welcome!!!');
+      if(snapshot.val().password === password) {
+        res.json(`Welcome ${userName} Your logged in!!!`);
+      } else {
+        res.json('Credentials doesnt match');
+      }
     } else {
       res.json('Account doesnt exist');
     }
