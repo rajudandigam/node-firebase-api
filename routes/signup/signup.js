@@ -1,32 +1,30 @@
 const { database: { realtime, firestore } } = require('../../config/config');
 
-const insertUserRealtime = (userRef, data, res) => {
-  userRef.set(data, function(err) {
-    if(err) {
-      res.send(err);
-    } else {
-      res.json({
-        message: `${data.fname} ${data.lname} user created`
-      })
-    }
-  });
+const insertUserRealtime = async (userRef, data, res) => {
+  const err = await userRef.set(data);
+
+  if(err) {
+    res.send(err);
+  } else {
+    res.json({
+      message: `${data.fname} ${data.lname} user created`
+    });
+  }
 };
 
-const insertUserFirestore = (userRef, data, res) => {
-  userRef.set(data)
-    .then( doc => {
-      console.log('Added doc', doc);
-      res.json({
-        message: `${data.fname} ${data.lname} user created`
-      })
-    })
-    .catch( err => {
-      console.log('Setting user error ', err);
-      res.json('something went wrong. Please try again later');
-    })
+const insertUserFirestore = async (userRef, data, res) => {
+  const doc = await userRef.set(data);
+
+  if(doc) {
+    res.json({
+      message: `${data.fname} ${data.lname} user created`
+    });
+  } else {
+    res.json('something went wrong. Please try again later');
+  }
 };
 
-const signup = (req, res, admin) => {
+const signup = async (req, res, admin) => {
   const { fname, lname, email, password, userName } = req.query;
   const data = {
     fname,
@@ -39,32 +37,33 @@ const signup = (req, res, admin) => {
   if(realtime) {
     const db = admin.database();
     const userRef = db.ref('users').child(userName);
+    const snapshot = await userRef.once('value');
 
-    userRef.once('value', (snapshot) => {
-      if(snapshot.exists()) {
-        res.json('User Name already exists. Please try different')
-      } else {
-        insertUserRealtime(userRef, data, res); 
-      }
-    });
+    if(!snapshot) {
+      res.json('something went wrong. Please try again later');
+    }
+
+    if(snapshot.exists()) {
+      res.json('User Name already exists. Please try different')
+    } else {
+      insertUserRealtime(userRef, data, res); 
+    }
   }
 
   if(firestore) {
     const db = admin.firestore();
     const userRef = db.collection('users').doc(userName);
+    const doc = userRef.get();
 
-    userRef.get()
-      .then( doc => {
-        if(!doc.exists) {
-          insertUserFirestore(userRef, data, res);
-        } else {
-          console.log('User Name already exists. Please try different');
-        }
-      })
-      .catch( err => {
-        console.log('Getting doc error ', err);
-        res.json('something went wrong. Please try again later');
-      });
+    if(!doc) {
+      res.json('something went wrong. Please try again later');
+    }
+
+    if(doc.exists) {
+      console.log('User Name already exists. Please try different');
+    } else {
+      insertUserFirestore(userRef, data, res);
+    }
   }
 };
 
