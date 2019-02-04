@@ -1,37 +1,53 @@
 const { database: { realtime, firestore } } = require('../../config/config');
 
 const checkRealtime = async (userRef, res, password) => {
-  const snapshot = userRef.once('value');
+  const snapshot = await userRef.once('value');
 
   if(!snapshot) {
-    res.json('something went wrong. Please try again later');
+    res.json({
+      message: 'something went wrong. Please try again later'
+    });
   }
 
   if(snapshot.exists()) {
     if(snapshot.val().password === password) {
-      res.json(`Welcome ${snapshot.key} Your logged in!!!`);
+      res.json({
+        message: `Welcome ${snapshot.key} Your logged in!!!`
+      });
     } else {
-      res.json('Credentials doesnt match');
+      res.json({
+        message: 'Credentials doesnt match'
+      });
     }
   } else {
-    res.json('Account doesnt exist');
+    res.json({
+      message: 'Account doesnt exist'
+    });
   }
 };
 
-const checkFirestore = (userDoc, res, password) => {
-  const doc = userDoc.get();
+const checkFirestore = async (userDoc, res, password) => {
+  const doc = await userDoc.get();
 
   if(!doc) {
-    res.json('something went wrong. Please try again later');
+    res.json({
+      message: 'something went wrong. Please try again later'
+    });
   }
 
   if(!doc.exists) {
-    res.json('Account doesnt exist');
+    res.json({
+      message: 'Account doesnt exist'
+    });
   } else {
     if(doc.data().password === password){
-      res.json(`Welcome ${doc.id} Your logged in!!!`);
+      res.json({
+        message: `Welcome ${doc.id} Your logged in!!!`
+      });
     } else {
-      res.json('Credentials doesnt match');
+      res.json({
+        message: 'Credentials doesnt match'
+      });
     }
   }
 };

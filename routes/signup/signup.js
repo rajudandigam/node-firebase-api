@@ -20,7 +20,9 @@ const insertUserFirestore = async (userRef, data, res) => {
       message: `${data.fname} ${data.lname} user created`
     });
   } else {
-    res.json('something went wrong. Please try again later');
+    res.json({
+      message: 'something went wrong. Please try again later'
+    });
   }
 };
 
@@ -40,11 +42,15 @@ const signup = async (req, res, admin) => {
     const snapshot = await userRef.once('value');
 
     if(!snapshot) {
-      res.json('something went wrong. Please try again later');
+      res.json({
+        message: 'something went wrong. Please try again later'
+      });
     }
 
     if(snapshot.exists()) {
-      res.json('User Name already exists. Please try different')
+      res.json({
+        message: `${userName} User Name already exists. Please try different`
+      });
     } else {
       insertUserRealtime(userRef, data, res); 
     }
@@ -53,14 +59,18 @@ const signup = async (req, res, admin) => {
   if(firestore) {
     const db = admin.firestore();
     const userRef = db.collection('users').doc(userName);
-    const doc = userRef.get();
+    const doc = await userRef.get();
 
     if(!doc) {
-      res.json('something went wrong. Please try again later');
+      res.json({
+        message: 'something went wrong. Please try again later'
+      });
     }
 
     if(doc.exists) {
-      console.log('User Name already exists. Please try different');
+      res.json({
+        message: `${userName} User Name already exists. Please try different`
+      });
     } else {
       insertUserFirestore(userRef, data, res);
     }
