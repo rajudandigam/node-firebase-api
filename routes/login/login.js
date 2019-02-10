@@ -42,7 +42,7 @@ const checkFirestore = async (userDoc, res, password) => {
   } else {
     if(doc.data().password === password){
       res.json({
-        message: `Welcome ${doc.id} Your logged in!!!`
+        message: `Welcome ${doc.id}. Your logged in!!!`
       });
     } else {
       res.json({

@@ -4,7 +4,7 @@
   "description": "RESTful api with Firebase",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon --inspect index.js"
   },
   "repository": "git@github.com:rajudandigam/node-firebase-api.git",
   "author": "Raju Dandigam <raju0574@gmail.com>",
@@ -15,6 +15,7 @@
     "firebase-admin": "^6.5.1"
   },
   "devDependencies": {
-    "body-parser": "^1.18.3"
+    "body-parser": "^1.18.3",
+    "nodemon": "^1.18.10"
   }
 }
