@@ -27,7 +27,7 @@ const insertUserFirestore = async (userRef, data, res) => {
 };
 
 const signup = async (req, res, admin) => {
-  const { fname, lname, email, password, userName } = req.query;
+  const { fname, lname, email, password, userName } = req.body;
   const data = {
     fname,
     lname,
@@ -74,6 +74,11 @@ const signup = async (req, res, admin) => {
     } else {
       insertUserFirestore(userRef, data, res);
     }
+  }
+  else {
+    res.json({
+      message: "Update the config for data base"
+    });
   }
 };
 
