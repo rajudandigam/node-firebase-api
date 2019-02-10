@@ -1,24 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const router = require('./routes/routes');
+
 const app = express();
-const signup = require('./routes/signup/signup');
-const login = require('./routes/login/login');
-const admin = require('./utils/firebase/admin');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-app.get('/', (req, res) => {
-  res.send('Welcome from api');
-});
-
-app.get('/login', (req, res) => {
-  login(req, res, admin);
-});
-
-app.post('/signup', (req, res) => {
-  signup(req, res, admin);
-});
+app.use(router);
 
 const hostName = '127.0.0.1';
 const port = 3000;
