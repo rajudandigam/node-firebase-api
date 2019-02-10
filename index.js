@@ -12,7 +12,7 @@ app.get('/login', (req, res) => {
   login(req, res, admin);
 });
 
-app.get('/signup', (req, res) => {
+app.post('/signup', (req, res) => {
   signup(req, res, admin);
 });
 

@@ -1,7 +1,7 @@
 const config = {
   database: {
     realtime: false,
-    firestore: false
+    firestore: true
   }
 };
 

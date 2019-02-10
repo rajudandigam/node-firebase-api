@@ -66,6 +66,12 @@ const login = (req, res, admin) => {
 
     checkFirestore(db.collection('users').doc(userName), res, password);
   }
+
+  else {
+    res.json({
+      message: "Update the config for data base"
+    });
+  }
 };
 
 module.exports = login;
