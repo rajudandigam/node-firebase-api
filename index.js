@@ -1,8 +1,12 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const signup = require('./routes/signup/signup');
 const login = require('./routes/login/login');
 const admin = require('./utils/firebase/admin');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
   res.send('Welcome from api');
