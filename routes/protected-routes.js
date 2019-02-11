@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const login = require('./login/login');
+const users = require('./users/users');
 const admin = require('../utils/firebase/admin');
 const { secret } = require('../secure_info/credentials');
 
@@ -28,6 +28,6 @@ ProtectedRoutes.use((req, res, next) => {
   }
 });
 
-ProtectedRoutes.get('/login', (req, res) => login(req, res, admin));
+ProtectedRoutes.get('/users', (req, res) => users(req, res, admin));
 
 module.exports = ProtectedRoutes;
